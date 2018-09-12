@@ -19,11 +19,11 @@ from cas import views as cas_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login/|^$', cas_views.login, name="login"),
-    url(r'^dashboard/', cas_views.dashboard, name="dashboard"),
-    url(r'^logout/', cas_views.logout, name="logout"),
-    url(r'^changepass/', cas_views.change_pass, name="change_password"),
-    url(r'^auth/', cas_views.auth, name="auth"),
-    url(r'^options/', cas_views.options, name="options"),
-    url(r'^start/', cas_views.start, name="start"),
+    # url(r'^login/|^$', cas_views.login, name="login"),
+    # url(r'^dashboard/', cas_views.dashboard, name="dashboard"),
+    # url(r'^logout/', cas_views.logout, name="logout"),
+    # url(r'^changepass/', cas_views.change_pass, name="change_password"),
+    # url(r'^auth/', cas_views.auth, name="auth"),
+    # url(r'^options/', cas_views.options, name="options"),
+    url(r'^start/', cas_views.start.as_view(), name="start"),
 ]

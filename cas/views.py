@@ -17,3 +17,18 @@ class start(View):
             return HttpResponseRedirect('/login/')
         else:
             return render(request, 'startup.html', {})
+    def post(self, request):
+        if start_up.objects.all().exists():
+            return HttpResponse(status=403)
+        else:
+            data = json.loads(request.body)
+            ldap_url = data["ldap_url"]
+            org = data["org"]
+            admin = data["admin"]
+            password = data["password"]
+            if ldaptrue:
+                return 200
+            else:
+                return 500            
+
+

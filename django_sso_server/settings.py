@@ -25,7 +25,7 @@ SECRET_KEY = 'ptzz^ka79$q783##!q2e(_&4qk61w)8_krosss(e-*01+#vwr@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cas',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'django_sso_server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +68,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'django_sso_server.wsgi.application'
 
 
@@ -76,9 +76,15 @@ WSGI_APPLICATION = 'django_sso_server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sso',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'TEST_CHARSET': 'UTF8',
+        'init_command': "SET foreign_key_checks = 0;",
+    },
 }
 
 
@@ -119,3 +125,51 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+LOG_PATH = 'logs/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(filename)s.%(funcName)s:%(lineno)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'app_log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': LOG_PATH + 'app.log',
+            'when': 'midnight',
+            'backupCount': '30',
+            'formatter': 'verbose',
+        },
+        'django_crontab': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_PATH + 'django_crontab.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'app_log': {
+            'handlers': ['app_log_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django_crontab.crontab': {
+            'handlers': ['django_crontab'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

@@ -1,17 +1,109 @@
-<!DOCTYPE html>
-<html>
-{% load staticfiles %}
+{% extends "base.html" %}
+{% block title %}sso server 系统初始化{% endblock %}
+{% block content_header %}
+    <h1>
+      系统初始化
+      <small>sso server setup</small>
+    </h1>
+{% endblock %}
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{% block title %}checkport{% endblock %}</title>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-</head>
+{% block content %}
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">配置初始化信息</h3><i class="fa fa-fw fa-question-circle" title="初始化帮助"  
+            data-container="body" data-toggle="popover" data-placement="top" 
+            data-content="请填写<认证ldap地址>,<组织(按格式)>,<管理员账号>,<密码>"></i>
+    </div>
+    <!-- /.box-header -->
+    <!-- form start -->
+    <form class="form-horizontal">
+        <div class="box-body">
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">ldap host</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="host" placeholder="ldap://ldap.calmkart.com:389" type="text">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">ldap organizations</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="org" placeholder="['people', 'service', 'temp']" type="text">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">ldap admin</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="admin" placeholder="cn=admin,dc=calmkart,dc=com" type="text">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">ldap pass</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="password" placeholder="password!@#" type="text">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+        </div>
 
-<body>
-<h1>hello world !!! (Start page)</h1>
-</body>
-    {% block footjs %}{% endblock %}
-    {% block footer %}{% endblock %}
-</html>
+        <!-- /.box-body -->
+        <div class="box-footer">
+            <button type="submit" class="btn btn-info pull-right" onclick="setup_submit()">Sign in</button>
+        </div>
+        <!-- /.box-footer -->
+    </form>
+</div>
+{% endblock %}
+
+{% block footer_js %}
+<script>
+    $(function () { 
+        $("[data-toggle='popover']").popover();
+    });
+
+    function setup_submit(){
+        var ldap_url = $("#host").val();
+        var org = $("#org").val();
+        var admin = $("#admin").val();
+        var password = $("#password").val();
+        var data = JSON.stringify({"ldap_url":ldap_url, "org":org, "admin":admin, "password":password});
+        $.ajax({
+            url: "/start_up",
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            async: true,
+            success: function(msg) {
+                bootbox.alert({
+                    title: "初始化成功",
+                    message: msg["msg"]
+                })
+                
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert({
+                    title: "初始化失败",
+                    message: msg["msg"]
+                })
+            }
+        });
+    };
+</script>>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
