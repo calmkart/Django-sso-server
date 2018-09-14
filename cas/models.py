@@ -20,9 +20,10 @@ class options(models.Model):
     系统设置,ldap地址及ldap管理员账号密码等设置
     '''
     ldap_url = models.CharField(max_length=50)
-    organizations = models.CharField(max_length=50)
+    base_dn = models.CharField(max_length=50)
     ldap_admin = models.CharField(max_length=50)
     ldap_pass = models.CharField(max_length=50)
+    sys_admin = models.TextField(blank=True)
 
 class rsakeys(models.Model):
     '''

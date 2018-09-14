@@ -10,7 +10,7 @@ from binascii import b2a_hex, a2b_hex
 
 #AES加解密,用于本地加密数据库密码和rsa private key
 aes_salt = "opquweoijuqowieh"
-class aes():
+class Aes():
     def __init__(self, key=aes_salt):
         self.key = key
         self.mode = AES.MODE_CBC
@@ -34,7 +34,7 @@ class aes():
         return plain_text.rstrip('\0')
 
 #rsa加解密,用于cookie的加解密
-class rsa():
+class Rsa():
     def gen_rsa_keys(self):
         random_generator = Random.new().read
         rsa = RSA.generate(1024, random_generator)
