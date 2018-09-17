@@ -61,39 +61,22 @@ class start(View):
                 log().error(str(e))
                 return JsonResponse({"status": False, "msg": str(e)})
 
-@method_decorator(auth_login, name="get")
+
 class login(View):
 
     @method_decorator(csrf_exempt, name="post")
+    @method_decorator(auth_login)
     def dispatch(self, *args, **kwargs):
         return super(login, self).dispatch(*args, **kwargs)
 
     def get(self, request, username):
-        return render(request, 'login.html')
+        return render(request, 'login.html', {})
 
-    def post(self, request):
+    def post(self, request, username):
         '''
-        登录验证ldap账号密码以及验证码
+
         '''
-        try:
-            data = json.loads(request.body)
-            ldap_username = data["ldap_username"]
-            password = data["password"]
-            captcha = data["captcha"].lower()
-            if request.session["captcha"].lower() != captcha:
-                return JsonResponse({"status":False, "msg":"验证码错误!"})
-            aes = Aes()
-            opt = options.objects.all()[0]
-            ldap_client = MyLdap(opt.ldap_url,
-                                opt.base_dn,
-                                opt.ldap_admin, 
-                                aes.decrypt(opt.ldap_pass))
-            if not ldap_client.ldap_get(uid=ldap_username,passwd=password):
-                return JsonResponse({"status":False, "msg":"账号或密码输入错误!"})
-            return JsonResponse({"status": True})
-        except Exception as e:
-            log().error(str(e))
-            return JsonResponse({"status":False, "msg":str(e)})
+        return JsonResponse({"status": True})
 
 
 class get_captcha(View):

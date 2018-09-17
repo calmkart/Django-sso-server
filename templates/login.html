@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}统一认证登录{% endblock %}
+{% block content_header %}
+{% endblock %}
+{% block header_css %}
+    <style type="text/css">
+    #code{
+     margin-right:100px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <div class="col-md-6 column">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="text-center panel-title">
+                                LDAP 登录
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">用户名</label>
+                                    <input class="form-control" id="ldap_username" type="text" />
+                                    <p class="help-block">
+                                        请输入您的ldap账号
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">密码</label>
+                                    <input class="form-control" id="ldap_password" type="password" />
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <label for="exampleInputEmail1">验证码</label>
+                                            <input class="form-control" type="text" id="captcha" />
+                                            <p class="help-block">
+                                                不区分大小写
+                                            </p>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <img id="captcha_img" src="{% url 'get_captcha' %}" onclick="refresh_captcha()" style="margin-top: 28px;">
+                                            <p class="help-block" onclick="refresh_captcha()">
+                                                看不清楚?换一张!
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <button type="button" class="btn btn-info btn-block" onclick="ldap_login()">登录</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 column">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">
+                                企业微信扫码登录
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            Panel content
+                        </div>
+                        <div class="panel-footer text-center">
+                            Panel footer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer_js %}
+<script>
+    //刷新验证码
+    function refresh_captcha() {
+        $("#captcha_img").attr("src",$("#captcha_img")[0].src + '?');
+    };
+
+    function ldap_login(){
+        var ldap_username = $("#ldap_username").val();
+        var password = $("#ldap_password").val();
+        var captcha = $("#captcha").val();
+        if (ldap_username.length*password.length*captcha.length===0){
+            bootbox.alert({
+                size: "small",
+                title: "错误",
+                message: "填写项不可为空!"
+            });
+            return            
+        };
+        var data = JSON.stringify({"ldap_username":ldap_username, "password":password, "captcha":captcha});
+        $.ajax({
+            url: "{% url 'login' %}",
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            async: true,
+            success: function(msg) {
+                if (msg["status"]===false){
+                    bootbox.alert({
+                        size: "small",
+                        title: "登录失败",
+                        message: msg["msg"],
+                        callback: function(){
+                            window.location.reload();
+                        }
+                    });
+                }; 
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert({
+                    size: "small",
+                    title: "登录失败",
+                    message: msg["msg"],
+                    callback: function(){
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    };
+</script>
+
+{% endblock %}

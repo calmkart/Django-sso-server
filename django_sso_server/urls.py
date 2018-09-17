@@ -26,4 +26,5 @@ urlpatterns = [
     # url(r'^auth/', cas_views.auth, name="auth"),
     # url(r'^options/', cas_views.options, name="options"),
     url(r'^start/$', cas_views.start.as_view(), name="start"),
+    url(r'^get_captcha/$',cas_views.get_captcha.as_view(), name="get_captcha"),
 ]
