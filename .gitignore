@@ -113,3 +113,4 @@ dmypy.json
 .vscode/
 
 v2.4.5.tar.gz
+.logs/*
