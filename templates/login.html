@@ -115,7 +115,9 @@
                             window.location.reload();
                         }
                     });
+                    return
                 }; 
+                window.location.href = "{% url 'dashboard' %}"
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 bootbox.alert({

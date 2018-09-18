@@ -2,7 +2,8 @@
 from __future__ import absolute_import
 import logging
 from django.http import HttpResponse, HttpResponseRedirect
-import cas.models
+from  cas.models import *
+from common.crypto import Aes, Rsa
 
 def auth_login(func):
     '''
@@ -11,22 +12,32 @@ def auth_login(func):
     若能解出username,则将username传入视图中
     '''
     def _auth(request):
-        if not cas.models.start_up.objects.all().exists():
+        if not start_up.objects.all().exists():
             return HttpResponseRedirect('/start/')
-        # cookie = request.COOKIES.get("sso_user", "")
-        # username = _sso_decode(cookie)
-        username = "pengng"
+        cookie = request.COOKIES.get("sso_user", "")
+        username = sso_decode(request, cookie)
         if username == "" or username == "error":
             return HttpResponseRedirect('/login/')
         else:
             return func(request, username)
     return _auth
 
-def _sso_decode(cookie):
+def sso_decode(request, cookie):
     '''
     cookie解密
     '''
-    return cookie
+    try:
+        rsa = Rsa()
+        aes = Aes()
+        private_key = aes.decrypt(rsakeys.objects.all()[0].private_key)
+        user_info = rsa.decrypt(private_key, cookie)
+        #cookie过期,与session中时间标记不符
+        if user_info.split("|||||")[1] != request.session["time"]:
+            return "error"
+        username = user_info.split("|||||")[0]
+        return username
+    except Exception:
+        return 'error'
 
 
 def log():

@@ -11,6 +11,7 @@ from binascii import b2a_hex, a2b_hex
 #AES加解密,用于本地加密数据库密码和rsa private key
 aes_salt = "opquweoijuqowieh"
 class Aes():
+    
     def __init__(self, key=aes_salt):
         self.key = key
         self.mode = AES.MODE_CBC
@@ -35,9 +36,12 @@ class Aes():
 
 #rsa加解密,用于cookie的加解密
 class Rsa():
+    
+    def __init__(self):
+        self.random_generator = Random.new().read
+
     def gen_rsa_keys(self):
-        random_generator = Random.new().read
-        rsa = RSA.generate(1024, random_generator)
+        rsa = RSA.generate(1024, self.random_generator)
         private_pem = rsa.exportKey()
         public_pem = rsa.publickey().exportKey()
         return (private_pem, public_pem)
@@ -52,5 +56,22 @@ class Rsa():
         rsakey = RSA.importKey(private_key)
         cipher = Cipher_pkcs1_v1_5.new(rsakey)
         decrypt_text = cipher.decrypt(base64.b64decode(
-            text), Random.new().read)
+            text), self.random_generator)
         return decrypt_text
+
+if __name__ == '__main__':
+    rsa = Rsa()
+    aes = Aes()
+    (pri,pub)=rsa.gen_rsa_keys()
+    jm = rsa.crypto(pub, "pengng|||||123908123.123123")
+    print rsa.decrypt(pri, jm)
+
+
+
+
+
+
+
+
+
+
