@@ -1,8 +1,0 @@
-ERROR 2018-09-17 12:48:45,672 views 60999 123145570013184 views.py.post:99 argument 1 must be string, not None
-ERROR 2018-09-17 12:49:27,127 views 61051 123145356263424 views.py.post:99 argument 1 must be string, not None
-ERROR 2018-09-17 12:50:49,369 views 61081 123145372229632 views.py.post:97 argument 1 must be string, not None
-ERROR 2018-09-17 12:51:18,282 views 61121 123145340444672 views.py.post:99 argument 1 must be string, not None
-ERROR 2018-09-17 12:52:26,914 views 61156 123145346879488 views.py.post:97 argument 1 must be string, not None
-ERROR 2018-09-17 12:52:57,299 views 61225 123145529286656 views.py.post:98 argument 1 must be string, not None
-ERROR 2018-09-17 12:55:59,246 ldapop 61281 140735799808960 ldapop.py.ldap_get:89 {'desc': 'Invalid credentials'}
-ERROR 2018-09-17 12:58:09,405 ldapop 61281 140735799808960 ldapop.py.ldap_get:89 {'desc': 'Invalid credentials'}
