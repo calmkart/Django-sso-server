@@ -50,7 +50,7 @@ class edit_options(View):
             ldap_admin = data["ldap_admin"]
             ldap_pass = data["ldap_pass"]
             sys_admin = data["sys_admin"]
-            timeout = 10*3600 if data["timetout"]=='' else int(data["timetout"])*3600
+            timeout = 10*3600 if data["timetout"]=='' else int(data["timetout"])
             domain = data["domain"]
             aes = Aes()
             options.objects.all().update(
