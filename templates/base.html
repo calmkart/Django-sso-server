@@ -1,157 +1,261 @@
 <!DOCTYPE html>
 <html>
 {% load staticfiles %}
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>{% block title %}AdminLTE 2 | 顶部导航{% endblock %}</title>
-  <!--网页标题左侧显示-->
-  <link rel="icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
-  <!--收藏夹显示图标-->
-  <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.6 -->
-  <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/font-awesome/css/font-awesome.min.css' %}">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/Ionicons/css/ionicons.min.css' %}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/dist/css/AdminLTE.min.css' %}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/dist/css/skins/_all-skins.min.css' %}">
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <!--网页标题左侧显示-->
+    <link rel="icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+    <!--收藏夹显示图标-->
+    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/x-icon">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/font-awesome/css/font-awesome.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/bower_components/Ionicons/css/ionicons.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/dist/css/AdminLTE.min.css' %}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="{% static 'AdminLTE-2.4.5/dist/css/skins/_all-skins.min.css' %}">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
   <script src="../../dist/js/html5shiv.min.js"></script>
   <script src="../../dist/js/respond.min.js"></script>
   <![endif]-->
-  {% block header_css %}{% endblock %}
+    {% block header_css %}{% endblock %}
 </head>
 <!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+
 <body class="hold-transition skin-green layout-top-nav">
-<div class="wrapper">
+    <div class="wrapper">
 
-<header class="main-header">
-    <!-- Header Navbar -->
-    <nav class="navbar navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <a href="/" class="navbar-brand"><b>Django sso</b> server</a>
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-            <i class="fa fa-bars"></i>
-          </button>
-        </div>
-        {% if admin_flag %}
-        <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-          {% block collapse %}
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/login">用户页面</a></li>
-            <li><a href="/options">管理后台</a></li>
-          </ul>
-          {% endblock %}
-        </div>
-        {% endif %}
+        <header class="main-header">
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a href="/" class="navbar-brand"><b>Django sso</b> server</a>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                    {% if admin_flag %}
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+                        {% block collapse %}
+                        <ul class="nav navbar-nav">
+                            <li id="user_page" class="active"><a href="/dashboard/">用户页面</a></li>
+                            <li id="manage_page"><a href="/manage/">管理后台</a></li>
+                        </ul>
+                        {% endblock %}
+                    </div>
+                    {% endif %}
 
-        <!-- Navbar Right Menu -->
-        {% if displayName %}
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
-                <!-- User Account Menu -->
-                <li class="dropdown user user-menu">
-                    <!-- Menu Toggle Button -->
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <!-- The user image in the navbar-->
-                        <img src="{% static 'AdminLTE-2.4.5/dist/img/user2-160x160.jpg' %}" class="user-image" alt="User Image">
-                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                        <span class="hidden-xs">{{ displayName }}</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <!-- User image -->
-                        <li class="user-header">
-                            <img src="{% static 'AdminLTE-2.4.5/dist/img/user2-160x160.jpg' %}" class="img-circle" alt="User Image">
-                            <p>
-                                {{ displayName }}
-                                <small>欢迎你的登陆</small>
-                            </p>
-                        </li>
-                        <!-- Menu Body -->
-                        <!-- Menu Footer-->
-                        <li class="user-footer">
-                            <div class="pull-left">
-                                <a href="/changepass" class="btn btn-default btn-flat">修改密码</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="/logout" class="btn btn-default btn-flat">注销</a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        {% endif %}
-      </div>
-    </nav>
-</header>
-  <!-- Full Width Column -->
-  <div class="content-wrapper">
-    <div class="container">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        {% block content_header %}
-        <h1>
-          顶部导航
-          <small>Example 2.0</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
-          <li><a href="#">Layout</a></li>
-          <li class="active">Top Navigation</li>
-        </ol>
-        {% endblock %}
-      </section>
+                    <!-- Navbar Right Menu -->
+                    {% if displayName %}
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- User Account Menu -->
+                            <li class="dropdown user user-menu">
+                                <!-- Menu Toggle Button -->
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <!-- The user image in the navbar-->
+                                    <img src="{% static 'AdminLTE-2.4.5/dist/img/user2-160x160.jpg' %}" class="user-image"
+                                        alt="User Image">
+                                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                                    <span class="hidden-xs">{{ displayName }}</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header">
+                                        <img src="{% static 'AdminLTE-2.4.5/dist/img/user2-160x160.jpg' %}" class="img-circle"
+                                            alt="User Image">
+                                        <p>
+                                            {{ displayName }}
+                                            <small>欢迎你的登陆</small>
+                                        </p>
+                                    </li>
+                                    <!-- Menu Body -->
+                                    <!-- Menu Footer-->
+                                    <li class="user-footer">
+                                        <div class="pull-left">
+                                            <a href="#" onclick="change_pass()" class="btn btn-default btn-flat">修改密码</a>
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="/logout/" class="btn btn-default btn-flat">注销</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </nav>
+        </header>
+        <!-- Full Width Column -->
+        <div class="content-wrapper">
+            <div class="container">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    {% block content_header %}
+                    <h1>
+                        顶部导航
+                        <small>Example 2.0</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+                        <li><a href="#">Layout</a></li>
+                        <li class="active">Top Navigation</li>
+                    </ol>
+                    {% endblock %}
+                </section>
 
-      <!-- Main content -->
-      <section class="content">
-        {% block content %}
-        <div class="box box-default">
-          <div class="box-header with-border">
-            <h3 class="box-title">Blank Box</h3>
-          </div>
-          <div class="box-body">
-            The great content goes here
-          </div>
-          <!-- /.box-body -->
+                <!-- Main content -->
+                <section class="content">
+                    {% block content %}
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Blank Box</h3>
+                        </div>
+                        <div class="box-body">
+                            The great content goes here
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                    {% endblock %}
+                    <!-- 编辑添加webs模态框 -->
+                    <div class="modal fade modal-default" id="changepass_modal" tabindex="-1" role="dialog"
+                        aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                        </div>
+                                        <div class="panel-body">
+                                            <input type="hidden" id="web_id" />
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">原密码</label>
+                                                <input class="form-control" id="oldpass" type="password" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">新密码</label>
+                                                <input class="form-control" id="newpass1" type="password" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">重复新密码</label>
+                                                <input class="form-control" id="newpass2" type="password" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                    <button type="button" class="btn btn-primary" onclick="submit_changepass()">提交</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal -->
+                    </div>
+                </section>
+                <!-- /.content -->
+            </div>
+            <!-- /.container -->
         </div>
-        <!-- /.box -->
-        {% endblock %}
-      </section>
-      <!-- /.content -->
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="pull-right hidden-xs">
+                    <b>^_^ Django sso server</b> v0.0.1
+                </div>
+                <strong>Copyright &copy; 2018 <a href="http://www.calmkart.com">cAlmkArt</a>.</strong> All rights
+                reserved.
+            </div>
+            <!-- /.container -->
+        </footer>
     </div>
-    <!-- /.container -->
-  </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <div class="container">
-      <div class="pull-right hidden-xs">
-        <b>^_^ Django sso server</b> v0.0.1
-      </div>
-      <strong>Copyright &copy; 2018 <a href="http://www.calmkart.com">cAlmkArt</a>.</strong> All rights
-      reserved.
-    </div>
-    <!-- /.container -->
-  </footer>
-</div>
-<!-- ./wrapper -->
+    <!-- ./wrapper -->
 
-<!-- jQuery 2.2.3 -->
-<script src="{% static 'AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js' %}"></script>
-<!-- Bootstrap 3.2.0 -->
-<script src="{% static 'AdminLTE-2.4.5/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/bootbox.min.js' %}"></script>
-{% block footer_js %}{% endblock %}
+    <!-- jQuery 2.2.3 -->
+    <script src="{% static 'AdminLTE-2.4.5/bower_components/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap 3.2.0 -->
+    <script src="{% static 'AdminLTE-2.4.5/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootbox.min.js' %}"></script>
+    {% block footer_js %}{% endblock %}
+    <script>
+        function change_pass() {
+            $('#changepass_modal').modal('show');
+        };
+
+        function submit_changepass() {
+            var oldpass = $("#oldpass").val();
+            var newpass1 = $("#newpass1").val();
+            var newpass2 = $("#newpass2").val();
+            if (newpass1 != newpass2) {
+                bootbox.alert({
+                    size: "small",
+                    title: "错误",
+                    message: "两次密码输入不相同,请检查"
+                })
+                return
+            }
+            if (oldpass.length*newpass1.length*newpass2.length===0){
+                bootbox.alert({
+                    size: "small",
+                    title: "错误",
+                    message: "填写项不可为空"
+                })
+                return
+            }
+            var data = JSON.stringify({"oldpass":oldpass, "newpass":newpass1});
+            $.ajax({
+                url: "{% url 'changepass' %}",
+                type: 'POST',
+                dataType: "json",
+                data: data,
+                async: true,
+                success: function(msg) {
+                    if (msg["status"]===false){
+                        bootbox.alert({
+                            size:"small",
+                            title: "修改密码失败",
+                            message: msg["msg"]
+                        });
+                    }
+                    else{
+                        bootbox.alert({
+                            size:"small",
+                            title: "修改密码成功",
+                            message: "修改密码成功,点击确定刷新页面",
+                            callback: function(){ 
+                                window.location.reload();
+                            }
+                        })
+                    }
+
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    bootbox.alert({
+                        size:"small",
+                        title: "修改密码失败",
+                        message: msg["msg"]
+                    })
+                }
+            });
+        };
+    </script>
 </body>
+
 </html>

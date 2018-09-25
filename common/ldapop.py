@@ -1,10 +1,15 @@
 # -*- coding:utf-8 -*-
 from __future__ import absolute_import
+
+import binascii
+import hashlib
+from base64 import b64encode
+
 import ldap
 import ldap.modlist as modlist
-import hashlib,binascii
-from base64 import b64encode
+
 from common.common import log
+
 
 class MyLdap():
      

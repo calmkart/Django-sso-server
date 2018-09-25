@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}统一认证登录{% endblock %}
+{% block title %}Dss登录{% endblock %}
 {% block content_header %}
 {% endblock %}
 {% block header_css %}
@@ -44,7 +44,7 @@
                                             </p>
                                         </div>
                                         <div class="col-xs-4">
-                                            <img id="captcha_img" src="{% url 'get_captcha' %}" onclick="refresh_captcha()" style="margin-top: 28px;">
+                                            <img id="captcha_img" src="{% url 'api:get_captcha' %}" onclick="refresh_captcha()" style="margin-top: 28px;">
                                             <p class="help-block" onclick="refresh_captcha()">
                                                 看不清楚?换一张!
                                             </p>

@@ -1,1 +1,44 @@
 {% extends "base.html" %}
+{% block title %}Dss导航页{% endblock %}
+{% block content_header %}
+<h1>
+  站点导航
+  <small>django sso server</small>
+</h1>
+<ol class="breadcrumb">
+  <li><a href="/"><i class="fa fa-dashboard"></i> 主页</a></li>
+  <li><a href="/dashboard/">用户页面</a></li>
+  <li class="active">站点导航</li>
+</ol>
+{% endblock %}
+{% block header_css %}
+    <style type="text/css">
+    .list{
+     margin-top:10px;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    {% if not systems %}
+                    <h5><strong>还没有添加任何站点</strong></h5>
+                    {% endif %}
+                    {% for sys in systems %}
+                    <div class="col-md-3 list">
+                        <a href="{{ sys.url }}" class="btn btn-info btn-block btn-lg">{{ sys.name }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="panel-footer">
+                    需要添加站点列表请联系管理员。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

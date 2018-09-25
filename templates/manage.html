@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block title %}Dss管理后台{% endblock %}
+{% block content_header %}
+<h1>
+  管理后台
+  <small>django sso server</small>
+</h1>
+<ol class="breadcrumb">
+  <li><a href="/"><i class="fa fa-dashboard"></i> 主页</a></li>
+  <li><a href="/dashboard/">用户页面</a></li>
+  <li class="active">管理后台</li>
+</ol>
+{% endblock %}
+{% block header_css %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <div class="col-md-6 column">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="text-center panel-title">
+                                系统设置
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">ldap host</label>
+                                <input class="form-control" id="ldap_host" type="text" value="{{options.ldap_url}}" />
+                                <p class="help-block">
+                                    ldap地址
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">ldap base dn</label>
+                                <input class="form-control" id="ldap_base_dn" type="text" value="{{options.base_dn}}" />
+                                <p class="help-block">
+                                    ldap地址
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">ldap admin</label>
+                                <input class="form-control" id="ldap_admin" type="text" value="{{options.ldap_admin}}"/>
+                                <p class="help-block">
+                                    ldap管理员账号
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">ldap pass</label>
+                                <input class="form-control" id="ldap_pass" type="password" value="{{ldap_pass}}"/>
+                                <p class="help-block">
+                                    ldap管理员密码
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">系统管理员账号列表</label>
+                                <input class="form-control" id="sys_admin" type="text" value="{{options.sys_admin}}"/>
+                                <p class="help-block">
+                                    Django sso server系统管理员账号(多个账号以','逗号分隔)
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">cookie有效期</label>
+                                <input class="form-control" id="timetout" type="number" value="{{options.cookie_timeout}}"/>
+                                <p class="help-block">
+                                    单点登录cookie有效期,单位为小时
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">单点登录子域名</label>
+                                <input class="form-control" id="domain" type="text" value="{{options.cookie_domain}}"/>
+                                <p class="help-block">
+                                    单点登录子域名,需要包含所有需要单点登录的系统,如.calmkart.com(注意前面的.),包含了所有*.calmkart.com的子域名
+                                </p>
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <button type="button" class="btn btn-info btn-block" onclick="submit_options()">提交修改</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 column">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title text-center">
+                                站点导航列表
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <button type="button" class="btn btn-info btn-block" onclick="edit_web()">添加站点</button>
+                            <table class="table table-bordered"  style="margin-top:10px">
+                                <!-- <caption>边框表格布局</caption> -->
+                                <thead>
+                                    <tr>
+                                        <th>站点名</th>
+                                        <th>地址</th>
+                                        <th>编辑</th>
+                                        <th>删除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for web in webs %}
+                                    <tr>
+                                        <td>{{ web.name }}</td>
+                                        <td>{{ web.url }}</td>
+                                        <td>
+                                            <div class="btn btn-appsm btn-primary btn-faedit btn-xs btn-block" onclick="edit_web('{{ web.id }}','{{ web.name }}','{{ web.url }}')" style="margin:0">
+                                                <i class="fa fa-fw fa-edit"></i>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn btn-appsm btn-danger btn-trash btn-xs btn-block" onclick="del_web('{{ web.id }}','{{ web.name }}','{{ web.url }}')" style="margin:0">
+                                                <i class="fa fa-fw fa-trash-o"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer text-center">
+                            web地址请记得添加 "http://" 或 "https://" 前缀
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑添加webs模态框 -->
+<div class="modal fade modal-default" id="webs_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">站点编辑</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                    </div>
+                    <div class="panel-body">
+                        <input type="hidden" id="web_id"/>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">站点名</label>
+                            <input class="form-control" id="web_name" type="text" value="" />
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">站点地址</label>
+                            <input class="form-control" id="web_url" type="text" value="" />
+                            <p class="help-block">
+                                站点地址请记得添加 "http://" 或 "https://" 前缀
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="submit_web()">提交</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+{% endblock %}
+
+{% block footer_js %}
+<script>
+    $("#user_page").removeClass("active");
+    $("#manage_page").addClass("active");
+
+    function submit_options(){
+        var method = "options";
+        var ldap_host = $("#ldap_host").val();
+        var ldap_base_dn = $("#ldap_base_dn").val();
+        var ldap_admin = $("#ldap_admin").val();
+        var ldap_pass = $("#ldap_pass").val();
+        var sys_admin = $("#sys_admin").val();
+        var timetout = $("#timetout").val();
+        var domain = $("#domain").val();
+        var data = JSON.stringify({
+            "ldap_host":ldap_host, 
+            "ldap_base_dn":ldap_base_dn, 
+            "ldap_admin":ldap_admin, 
+            "ldap_pass":ldap_pass, 
+            "sys_admin":sys_admin,
+            "timetout":timetout,
+            "domain":domain
+            });
+        $.ajax({
+            url: "{% url 'api:edit_options' %}",
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            async: true,
+            success: function(msg) {
+                if (msg["status"]===false){
+                    bootbox.alert({
+                        size:"small",
+                        title: "修改系统设置失败",
+                        message: msg["msg"]
+                    });
+                }
+                else{
+                    bootbox.alert({
+                        size:"small",
+                        title: "修改系统设置成功",
+                        message: "系统系统设置成功,点击确定刷新页面",
+                        callback: function(){ 
+                            window.location.reload();
+                        }
+                    })
+                }
+                
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert({
+                    size:"small",
+                    title: "修改系统设置失败",
+                    message: msg["msg"]
+                })
+            }
+        });
+    };
+
+    function submit_web(){
+        var web_id = $("#web_id").val();
+        var web_name = $("#web_name").val();
+        var web_url = $("#web_url").val();
+        var data = JSON.stringify({"web_id":web_id, "web_name":web_name, "web_url":web_url});
+        $.ajax({
+            url: "{% url 'api:edit_web' %}",
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            async: true,
+            success: function(msg) {
+                if (msg["status"]===false){
+                    bootbox.alert({
+                        size:"small",
+                        title: "修改站点列表失败",
+                        message: msg["msg"]
+                    });
+                }
+                else{
+                    bootbox.alert({
+                        size:"small",
+                        title: "修改站点列表成功",
+                        message: "修改站点列表成功,点击确定刷新页面",
+                        callback: function(){ 
+                            window.location.reload();
+                        }
+                    })
+                }
+                
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert({
+                    size:"small",
+                    title: "修改站点列表失败",
+                    message: msg["msg"]
+                })
+            }
+        });
+    };
+
+    function edit_web(web_id="", web_name="", web_url=""){
+        $('#webs_modal').modal('show');
+        if (web_id==""){
+            $("#web_id").val("");
+            $("#web_name").val("");
+            $("#web_url").val("");
+        }
+        else{
+            $("#web_id").val(web_id);
+            $("#web_name").val(web_name);
+            $("#web_url").val(web_url);
+        }
+
+    };
+
+    function del_web(web_id, web_name, web_url){
+        bootbox.confirm({
+            size: "small",
+            title: "确认删除<strong class=\"text-danger\">"+web_name+"</strong>?",
+            message: "确认删除<br><strong class=\"text-danger\">"+web_name+"("+web_url+")</strong>?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success',
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result){
+                if(result){
+                    var data = JSON.stringify({"web_id":web_id});
+                    alert(data);
+                    $.ajax({
+                        url: "{% url 'api:del_web' %}",
+                        type: 'POST',
+                        dataType: "json",
+                        data: data,
+                        async: true,
+                        success: function(msg) {
+                            if (msg["status"]===false){
+                                bootbox.alert({
+                                    size:"small",
+                                    title: "删除站点失败",
+                                    message: msg["msg"]
+                                });
+                            }
+                            else{
+                                bootbox.alert({
+                                    size:"small",
+                                    title: "删除站点成功",
+                                    message: "删除站点成功,点击确定刷新页面",
+                                    callback: function(){ 
+                                        window.location.reload();
+                                    }
+                                })
+                            }
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            bootbox.alert({
+                                size:"small",
+                                title: "删除站点失败",
+                                message: msg["msg"]
+                            })
+                        }
+                    });
+                }
+                else{
+                    return
+                }
+            },
+        });
+    }
+</script>
+
+{% endblock %}

@@ -13,18 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from cas import views as cas_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^login/$|^$', cas_views.login.as_view(), name="login"),
-    url(r'^dashboard/', cas_views.dashboard.as_view(), name="dashboard"),
-    # url(r'^logout/', cas_views.logout, name="logout"),
-    # url(r'^changepass/', cas_views.change_pass, name="change_password"),
-    # url(r'^auth/', cas_views.auth, name="auth"),
-    # url(r'^options/', cas_views.options, name="options"),
     url(r'^start/$', cas_views.start.as_view(), name="start"),
-    url(r'^get_captcha/$',cas_views.get_captcha.as_view(), name="get_captcha"),
+    url(r'^login/$|^$', cas_views.login.as_view(), name="login"),
+    url(r'^dashboard/$', cas_views.dashboard.as_view(), name="dashboard"),
+    url(r'^manage/$', cas_views.manage.as_view(), name="manage"),
+    url(r'^changepass/', cas_views.change_pass.as_view(), name="changepass"),
+    url(r'^logout/', cas_views.logout.as_view(), name="logout"),
+    url(r'^api/', include('api.urls', namespace='api')),
+    
 ]

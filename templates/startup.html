@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}sso server 系统初始化{% endblock %}
+{% block title %}Dss系统初始化{% endblock %}
 {% block content_header %}
     <h1>
       系统初始化
@@ -12,7 +12,7 @@
     <div class="box-header with-border">
         <h3 class="box-title">配置初始化信息</h3><i class="fa fa-fw fa-question-circle" title="初始化帮助"  
             data-container="body" data-toggle="popover" data-placement="top" 
-            data-content="请填写<认证ldap地址>,<ldap基础dn>,<管理员账号>,<密码>,<sso系统管理员账号>(注意格式,用逗号分隔)"></i>
+            data-content="请填写<认证ldap地址>,<ldap基础dn>,<管理员账号>,<密码>,<sso系统管理员账号>(注意格式,用逗号分隔),<cookie有效期>(单位小时,可不填,默认10小时),<单点登录子域名>(如.calmkart.com)"></i>
     </div>
     <!-- /.box-header -->
     <!-- form start -->
@@ -58,6 +58,22 @@
                 </div>
                 <div class="col-sm-4"></div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">cookie有效期(选填,单位小时,默认10小时)</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="timeout" placeholder="10" type="number">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <label for="inputEmail3" class="col-sm-2 control-label">单点登录子域名(选填)</label>
+                <div class="col-sm-4">
+                    <input class="form-control" id="domain" placeholder=".calmkart.com" type="text">
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
         </div>
     </form>
         <!-- /.box-body -->
@@ -80,7 +96,17 @@
         var admin = $("#admin").val();
         var password = $("#password").val();
         var sys_admin = $("#sys_admin").val();
-        var data = JSON.stringify({"ldap_url":ldap_url, "basedn":basedn, "admin":admin, "password":password, "sys_admin":sys_admin});
+        var timeout = $("timeout").val();
+        var domain = $("#domain").val();
+        var data = JSON.stringify({
+            "ldap_url":ldap_url, 
+            "basedn":basedn, 
+            "admin":admin, 
+            "password":password, 
+            "sys_admin":sys_admin,
+            "timeout":timeout,
+            "domain":domain,
+        });
         $.ajax({
             url: "{% url 'start' %}",
             type: 'POST',
@@ -99,7 +125,7 @@
                         title: "初始化成功",
                         message: "系统初始化成功,点击确认跳转至登录界面",
                         callback: function(){ 
-                            window.location.href = "/login/";;
+                            window.location.href = "/login/";
                         }
                     })
                 }
@@ -113,7 +139,7 @@
             }
         });
     };
-</script>>
+</script>
 
 {% endblock %}
 

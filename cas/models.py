@@ -1,4 +1,4 @@
-#--*--coding:utf-8--*-
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
@@ -15,15 +15,19 @@ class start_up(models.Model):
     class Meta:
         verbose_name_plural = '系统初始化表'
 
+
 class options(models.Model):
     '''
-    系统设置,ldap地址及ldap管理员账号密码等设置
+    系统设置,ldap地址及ldap管理员账号密码,cookie有效域和cookie有效期等设置
     '''
     ldap_url = models.CharField(max_length=50)
     base_dn = models.CharField(max_length=50)
     ldap_admin = models.CharField(max_length=50)
     ldap_pass = models.CharField(max_length=50)
     sys_admin = models.TextField(blank=True)
+    cookie_domain = models.CharField(max_length=50, blank=True)
+    cookie_timeout = models.IntegerField(default=36000)
+
 
 class rsakeys(models.Model):
     '''
@@ -31,3 +35,11 @@ class rsakeys(models.Model):
     '''
     private_key = models.TextField()
     public_key = models.TextField()
+
+
+class webs(models.Model):
+    '''
+    dashboard中需要导航的站点列表
+    '''
+    name = models.CharField(max_length=50)
+    url = models.CharField(max_length=100)
