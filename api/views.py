@@ -31,8 +31,8 @@ class get_captcha(View):
             request.session["captcha"] = code
             img.save(f, 'PNG')
             return HttpResponse(f.getvalue())
-        except Exception as e:
-            log().error(str(e))
+        except Exception:
+            log().error(traceback.format_exc())
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -64,7 +64,7 @@ class edit_options(View):
             )
             return JsonResponse({"status": True, "msg": "已成功修改系统设置"})
         except Exception as e:
-            log().error(str(e))
+            log().error(traceback.format_exc())
             return JsonResponse({"status": False, "msg": str(e)})
 
 
@@ -96,7 +96,7 @@ class edit_web(View):
                 )
                 return JsonResponse({"status": True, "msg": "已成功添加站点"})
         except Exception as e:
-            log().error(str(e))
+            log().error(traceback.format_exc())
             return JsonResponse({"status": False, "msg": str(e)})
 
 
@@ -114,7 +114,7 @@ class del_web(View):
             webs.objects.get(pk=int(web_id)).delete()
             return JsonResponse({"status": True, "msg": "已成功删除站点"})
         except Exception as e:
-            log().error(str(e))
+            log().error(traceback.format_exc())
             return JsonResponse({"status": False, "msg": str(e)})
 
 
@@ -133,5 +133,5 @@ class auth(View):
                 return JsonResponse({"status":False, "msg":"error"})
             return JsonResponse({"status": True, "msg": username})
         except Exception as e:
-            log().error(str(e))
+            log().error(traceback.format_exc())
             return JsonResponse({"status": False, "msg": str(e)})
