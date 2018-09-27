@@ -27,6 +27,20 @@ class options(models.Model):
     sys_admin = models.TextField(blank=True)
     cookie_domain = models.CharField(max_length=50, blank=True)
     cookie_timeout = models.IntegerField(default=36000)
+    # 微信扫码登录相关配置
+
+
+class weixin(models.Model):
+    '''
+    企业微信扫码登录相关配置
+    '''
+    appid = models.CharField(max_length=50, blank=True)
+    agentid = models.CharField(max_length=50, blank=True)
+    redirect_uri = models.CharField(max_length=150, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    # 企业微信corpid和corpsecret
+    corpid = models.CharField(max_length=100, blank=True)
+    corp_secret = models.CharField(max_length=100, blank=True)
 
 
 class rsakeys(models.Model):

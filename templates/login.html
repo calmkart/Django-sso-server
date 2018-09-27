@@ -59,18 +59,8 @@
                     </div>
                 </div>
                 <div class="col-md-6 column">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title text-center">
-                                企业微信扫码登录
-                            </h3>
-                        </div>
-                        <div class="panel-body">
-                            Panel content
-                        </div>
-                        <div class="panel-footer text-center">
-                            Panel footer
-                        </div>
+                    <div class="col-md-offset-2" id="weixin">
+                    Panel content
                     </div>
                 </div>
             </div>
@@ -80,6 +70,7 @@
 {% endblock %}
 
 {% block footer_js %}
+<script src="http://rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"></script>
 <script>
     //刷新验证码
     function refresh_captcha() {
@@ -131,6 +122,15 @@
             }
         });
     };
+    
+    //微信登录
+    window.WwLogin({
+        "id" : "weixin",  
+        "appid" : "{{appid}}",
+        "agentid" : "{{agentid}}",
+        "redirect_uri" :encodeURIComponent("{{redirect_uri}}"),
+        "state" : "{{state}}",
+    });
 </script>
 
 {% endblock %}

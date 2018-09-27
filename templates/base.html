@@ -52,7 +52,13 @@
                         {% block collapse %}
                         <ul class="nav navbar-nav">
                             <li id="user_page" class="active"><a href="/dashboard/">用户页面</a></li>
-                            <li id="manage_page"><a href="/manage/">管理后台</a></li>
+                            <li id="back_page" class="menuItem dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"  role="button" aria-haspopup="true">后台页面 <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li id="manage_page"><a href="/manage/">配置管理后台</a></li>
+                                    <li id="wx_conf_page"><a href="/wxconf/">企业微信扫码</a></li>
+                                </ul>
+                            </li>
                         </ul>
                         {% endblock %}
                     </div>
@@ -195,6 +201,12 @@
     <script src="{% static 'js/bootbox.min.js' %}"></script>
     {% block footer_js %}{% endblock %}
     <script>
+        $('li.dropdown').mouseover(function() {
+            $(this).addClass('open');
+        }).mouseout(function() {
+            $(this).removeClass('open');
+        });
+
         function change_pass() {
             $('#changepass_modal').modal('show');
         };

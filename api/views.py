@@ -50,7 +50,8 @@ class edit_options(View):
             ldap_admin = data["ldap_admin"]
             ldap_pass = data["ldap_pass"]
             sys_admin = data["sys_admin"]
-            timeout = 10*3600 if data["timetout"]=='' else int(data["timetout"])
+            timeout = 10 * \
+                3600 if data["timetout"] == '' else int(data["timetout"])
             domain = data["domain"]
             aes = Aes()
             options.objects.all().update(
@@ -130,7 +131,7 @@ class auth(View):
             sso_cookie = data["sso_cookie"]
             username = sso_decode(sso_cookie)
             if username == '' or username == 'error':
-                return JsonResponse({"status":False, "msg":"error"})
+                return JsonResponse({"status": False, "msg": "error"})
             return JsonResponse({"status": True, "msg": username})
         except Exception as e:
             log().error(traceback.format_exc())

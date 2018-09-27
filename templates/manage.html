@@ -7,8 +7,8 @@
 </h1>
 <ol class="breadcrumb">
   <li><a href="/"><i class="fa fa-dashboard"></i> 主页</a></li>
-  <li><a href="/dashboard/">用户页面</a></li>
-  <li class="active">管理后台</li>
+  <li><a href="#">后台页面</a></li>
+  <li class="active">配置管理后台</li>
 </ol>
 {% endblock %}
 {% block header_css %}
@@ -87,6 +87,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title text-center">
                                 站点导航列表
+                                <i class="fa fa-fw fa-question-circle" onclick="add_site_help()"></i>
                             </h3>
                         </div>
                         <div class="panel-body">
@@ -169,15 +170,75 @@
     </div><!-- /.modal -->
 </div>
 
+<!-- 添加站点帮助模态框 -->
+<div class="modal fade modal-default" id="help_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">添加站点帮助</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <code>复制以下装饰器,在需要登录的函数前做装饰即可</code>
+                    </div>
+                    <div class="panel-body">
+                        <pre>
+import requests
+
+def auth_login(func):
+'''
+装饰器,用于需要登录的views functions,将读取cookie并调用sso的api获取username
+<code>
+也可手动编写相关装饰器
+sso系统的登录鉴权api为"http://sso域名/api/auth"(如"http://sso.calmkart.com/api/auth")
+用POST方法以json形式将sso_cookie传给上述api,
+返回{"status":True, "msg":{username}}则登录成功
+否则{"status":False, "msg":{exception}}则登录失败
+</code>
+'''
+    def _auth(request):
+        cookie = request.COOKIES.get("sso_user", "")
+        if cookie=="":
+            return HttpResponseRedirect("{http://sso站域名/}")
+        r = request.post("{http://sso站域名/api/auth}",data={"sso_cookie":cookie})
+        if r.json()["status"]==False:
+            return HttpResponseRedirect("{http://sso站域名}")
+        else:
+            username = r.json()["msg"]
+            if username == "" or username == "error":
+                return HttpResponseRedirect("{http://sso站域名/}")
+            else:
+                return func(request, username)
+    return _auth
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 {% endblock %}
 
 {% block footer_js %}
 <script>
     $("#user_page").removeClass("active");
     $("#manage_page").addClass("active");
+    $("#back_page").addClass("active");
+    $("#back_page").removeClass("open");
+
+    function add_site_help(){
+        $('#help_modal').modal('show');
+
+    }
 
     function submit_options(){
-        var method = "options";
         var ldap_host = $("#ldap_host").val();
         var ldap_base_dn = $("#ldap_base_dn").val();
         var ldap_admin = $("#ldap_admin").val();

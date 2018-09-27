@@ -5,6 +5,8 @@ import json
 import time
 import traceback
 
+import requests
+from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -41,7 +43,9 @@ class start(View):
                 admin = data["admin"]
                 password = data["password"]
                 sys_admin = data["sys_admin"]
-                timeout = 10*3600 if data["timetout"]=='' else int(data["timetout"])*3600
+                timeout = 10 * \
+                    3600 if data["timetout"] == '' else int(
+                        data["timetout"])*3600
                 domain = data["domain"]
                 # 验证ldap地址及管理员账号密码是否有效
                 ldap_client = MyLdap(ldap_url, base_dn, admin, password)
@@ -65,6 +69,8 @@ class start(View):
                         private_key=aes.encrypt(pri),
                         public_key=pub
                     )
+                    # 初始化空白的企业微信扫码登录数据库
+                    weixin.objects.create()
                     return JsonResponse({"status": True, "msg": "系统初始化成功"})
                 else:
                     return JsonResponse({"status": False, "msg": ldap_client.status["msg"]})
@@ -86,7 +92,13 @@ class login(View):
         cookie = request.COOKIES.get("sso_user", "")
         username = sso_decode(cookie)
         if username == '' or username == 'error':
-            return render(request, 'login.html')
+            wx = {
+                "appid": weixin.objects.all()[0].appid,
+                "agentid": weixin.objects.all()[0].agentid,
+                "redirect_uri": weixin.objects.all()[0].redirect_uri,
+                "state": weixin.objects.all()[0].state
+            }
+            return render(request, 'login.html', wx)
         else:
             return HttpResponseRedirect('/dashboard/')
 
@@ -143,7 +155,6 @@ class dashboard(View):
                       )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class manage(View):
 
     @method_decorator(auth_login)
@@ -195,12 +206,87 @@ class change_pass(View):
                                  opt.ldap_admin,
                                  aes.decrypt(opt.ldap_pass))
             if not ldap_client.ldap_get(uid=username, passwd=oldpass):
-                return JsonResponse({"status":False, "msg":"密码输入错误"})
+                return JsonResponse({"status": False, "msg": "密码输入错误"})
             uppass_res = ldap_client.cnupdatepass(cn=username, passwd=newpass)
             if uppass_res["status"] == True:
-                return JsonResponse({"status":True})
+                return JsonResponse({"status": True})
             else:
-                return JsonResponse({"status":False, "msg":uppass_res["msg"]})
+                return JsonResponse({"status": False, "msg": uppass_res["msg"]})
         except Exception as e:
             log().error(traceback.format_exc())
-            return JsonResponse({"status":False, "msg":str(e)})
+            return JsonResponse({"status": False, "msg": str(e)})
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class wxconf(View):
+    '''
+    企业微信扫码登录回调后台
+    '''
+
+    @method_decorator(auth_login)
+    def get(self, request, username):
+        # 判断是否是管理员
+        if username not in options.objects.all()[0].sys_admin.split(","):
+            return HttpResponseRedirect('/dashboard/')
+        aes = Aes()
+        wx_corp_secret = '' if weixin.objects.all(
+        )[0].corp_secret == '' else aes.decrypt(weixin.objects.all()[0].corp_secret)
+        return render(request, 'wxconf.html',
+                      {
+                          "displayName": username,
+                          "admin_flag": 1,
+                          "wx_conf": weixin.objects.all()[0],
+                          "wx_corp_secret": wx_corp_secret
+                      }
+                      )
+
+    @method_decorator(sysadmin_login)
+    def post(self, request):
+        try:
+            aes = Aes()
+            data = json.loads(request.body)
+            print data
+            if data["corp_secret"] != "":
+                data["corp_secret"] = aes.encrypt(str(data["corp_secret"]))
+            weixin.objects.all().update(**data)
+            return JsonResponse({"status": True, "msg": "修改设置成功"})
+        except Exception as e:
+            print e
+            log().error(traceback.format_exc())
+            return JsonResponse({"status": False, "msg": str(e)})
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class wxlogin(View):
+
+    def get(self, request):
+        try:
+            code = request.GET.get("code")
+            state = request.GET.get("state")
+            if state != weixin.objects.all()[0].state:
+                return 403
+            # 企业微信获取userid流程
+            if not cache.get("wx_token"):
+                set_wx_token()
+            wx_token = cache.get("wx_token")
+            payload = {
+                'access_token': wx_token,
+                'code': code
+            }
+            r = requests.get(
+                "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo", params=payload)
+            if r.json()["errcode"] != 0:
+                return HttpResponseRedirect('/login/')
+            username = r.json()["UserId"]
+            # 写cookie
+            rsa = Rsa()
+            now = time.time()
+            public_key = rsakeys.objects.all()[0].public_key
+            user_info = "{0}|||||{1}".format(username, now)
+            response = HttpResponseRedirect('/dashboard/')
+            response.set_cookie('sso_user', rsa.crypto(
+                public_key, user_info), domain=options.objects.all()[0].cookie_domain)
+            return response
+        except Exception as e:
+            log().error(traceback.format_exc())
+            return HttpResponseRedirect('/login/')

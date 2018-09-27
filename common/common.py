@@ -1,8 +1,12 @@
 # -*- coding:utf-8 -*-
 from __future__ import absolute_import
+
 import logging
 import time
+
+from django.core.cache import cache
 from django.http import HttpResponse, HttpResponseRedirect
+
 from cas.models import *
 from common.crypto import Aes, Rsa
 
@@ -62,3 +66,20 @@ def sysadmin_login(func):
         else:
             return func(request)
     return _auth
+
+
+def set_wx_token():
+    '''
+    更修企业微信token到缓存里
+    '''
+    aes = Aes()
+    wx_corp_secret = '' if weixin.objects.all(
+    )[0].corp_secret == '' else aes.decrypt(weixin.objects.all()[0].corp_secret)
+    payload = {
+        'corpid': str(weixin.objects.all()[0].corpid),
+        'corpsecret': wx_corp_secret
+    }
+    r = requests.get(
+        "https://qyapi.weixin.qq.com/cgi-bin/gettoken", params=payload)
+    if r.json()["errcode"] == 0:
+        cache.set('wx_token', r.json()["access_token"], 7100)
