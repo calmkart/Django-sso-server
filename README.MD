@@ -1,5 +1,5 @@
 # Django Sso Server
-## 一个用户友好的Django单点登录系统
+## 一个用户友好的Django单点登录系统(ldap&&企业微信扫码)
 ***
 ### 1 . 功能简介:
 
