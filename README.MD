@@ -67,5 +67,8 @@ python manage.py migrate
 返回{"status":True, "msg":$username}则登录成功
 
 返回{"status":False, "msg":$exception}则登录失败
-
 </code>
+
+
+# 更多内容
+[calmkart的blog](http://www.calmkart.com/ "calmkart")
