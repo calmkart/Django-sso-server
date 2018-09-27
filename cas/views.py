@@ -44,8 +44,8 @@ class start(View):
                 password = data["password"]
                 sys_admin = data["sys_admin"]
                 timeout = 10 * \
-                    3600 if data["timetout"] == '' else int(
-                        data["timetout"])*3600
+                    3600 if data["timeout"] == '' else int(
+                        data["timeout"])*3600
                 domain = data["domain"]
                 # 验证ldap地址及管理员账号密码是否有效
                 ldap_client = MyLdap(ldap_url, base_dn, admin, password)
@@ -79,6 +79,7 @@ class start(View):
                 options.objects.all().delete()
                 start_up.objects.all().delete()
                 rsakeys.objects.all().delete()
+                weixin.objects.all().delete()
                 log().error(traceback.format_exc())
                 return JsonResponse({"status": False, "msg": str(e)})
 
@@ -245,13 +246,11 @@ class wxconf(View):
         try:
             aes = Aes()
             data = json.loads(request.body)
-            print data
             if data["corp_secret"] != "":
                 data["corp_secret"] = aes.encrypt(str(data["corp_secret"]))
             weixin.objects.all().update(**data)
             return JsonResponse({"status": True, "msg": "修改设置成功"})
         except Exception as e:
-            print e
             log().error(traceback.format_exc())
             return JsonResponse({"status": False, "msg": str(e)})
 

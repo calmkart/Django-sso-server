@@ -1,0 +1,7 @@
+Django==1.11
+ldap==1.0.2
+ldap3==2.2.4
+M2Crypto==0.21.1
+pycrypto==2.6.1
+requests==2.10.0
+rsa==3.4.2
