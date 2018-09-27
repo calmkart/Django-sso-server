@@ -59,15 +59,12 @@ python manage.py migrate
 *****
 
 #### 4 . 子站鉴权api说明
-<code>
+<pre>
 /api/auth
-
 子站用POST方法以json形式将{"sso_cookie":$sso_cookie}传给此api,
-
 返回{"status":True, "msg":$username}则登录成功
-
 返回{"status":False, "msg":$exception}则登录失败
-</code>
+</pre>
 
 
 # 更多内容
