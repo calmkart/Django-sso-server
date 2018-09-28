@@ -76,4 +76,4 @@ python manage.py migrate
 
 [关于操作rsa,aes加解密](http://www.calmkart.com/?p=360 "python操作rsa,aes加解密说明")
 
-[我的技术blog](http://www.calmkart.com/ "myblog")
+[我的blog](http://www.calmkart.com/ "myblog")
