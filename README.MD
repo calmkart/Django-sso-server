@@ -68,4 +68,12 @@ python manage.py migrate
 
 
 # 更多内容
-[calmkart的blog](http://www.calmkart.com/ "calmkart")
+[关于系统流程](http://www.calmkart.com/?p=353 "系统流程说明")
+
+[关于图片验证码](http://www.calmkart.com/?p=332 "图片验证码说明")
+
+[关于操作ldap](http://www.calmkart.com/?p=355 "python操作ldap说明")
+
+[关于操作rsa,aes加解密](http://www.calmkart.com/?p=360 "python操作rsa,aes加解密说明")
+
+[我的技术blog](http://www.calmkart.com/ "myblog")
