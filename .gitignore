@@ -116,4 +116,4 @@ v2.4.5.tar.gz
 .logs/*
 .history/
 .idea/
-logs/*
+logs/*.log

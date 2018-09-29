@@ -1,0 +1,27 @@
+ERROR 2018-09-26 08:40:41,708 views 14435 123145325199360 views.py.post:248 Traceback (most recent call last):
+  File "/opt/code/django_sso_server/cas/views.py", line 244, in post
+    data["corp_secret"] = aes.crypto(data["corp_secret"])
+AttributeError: Aes instance has no attribute 'crypto'
+
+ERROR 2018-09-26 08:41:08,536 views 14668 123145344372736 views.py.post:248 Traceback (most recent call last):
+  File "/opt/code/django_sso_server/cas/views.py", line 244, in post
+    data["corp_secret"] = aes.encrypt(data["corp_secret"])
+  File "/opt/code/django_sso_server/common/crypto.py", line 29, in encrypt
+    self.ciphertext = cryptor.encrypt(text)
+  File "/usr/local/lib/python2.7/site-packages/Crypto/Cipher/_mode_cbc.py", line 162, in encrypt
+    c_uint8_ptr(plaintext),
+  File "/usr/local/lib/python2.7/site-packages/Crypto/Util/_raw_api.py", line 109, in c_uint8_ptr
+    raise TypeError("Object type %s cannot be passed to C code" % type(data))
+TypeError: Object type <type 'unicode'> cannot be passed to C code
+
+ERROR 2018-09-26 08:41:54,816 views 14694 123145430716416 views.py.post:250 Traceback (most recent call last):
+  File "/opt/code/django_sso_server/cas/views.py", line 245, in post
+    data["corp_secret"] = aes.encrypt(data["corp_secret"])
+  File "/opt/code/django_sso_server/common/crypto.py", line 29, in encrypt
+    self.ciphertext = cryptor.encrypt(text)
+  File "/usr/local/lib/python2.7/site-packages/Crypto/Cipher/_mode_cbc.py", line 162, in encrypt
+    c_uint8_ptr(plaintext),
+  File "/usr/local/lib/python2.7/site-packages/Crypto/Util/_raw_api.py", line 109, in c_uint8_ptr
+    raise TypeError("Object type %s cannot be passed to C code" % type(data))
+TypeError: Object type <type 'unicode'> cannot be passed to C code
+
