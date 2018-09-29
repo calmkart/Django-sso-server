@@ -1,4 +1,0 @@
-ERROR 2018-09-18 03:36:13,630 ldapop 65259 123145316261888 ldapop.py.ldap_get:91 {'desc': 'Invalid credentials'}
-ERROR 2018-09-18 03:36:57,629 ldapop 65259 123145316261888 ldapop.py.ldap_get:91 {'desc': 'Invalid credentials'}
-ERROR 2018-09-18 04:17:31,687 ldapop 66499 123145336500224 ldapop.py.ldap_get:91 {'desc': 'Invalid credentials'}
-ERROR 2018-09-18 04:37:05,874 views 67027 123145530331136 views.py.post:72 'publict_key' is an invalid keyword argument for this function

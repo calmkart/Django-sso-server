@@ -1,9 +1,0 @@
-ERROR 2018-09-21 06:58:24,324 views 88642 123145578369024 views.py.post:125 set_cookie() takes at least 2 arguments (2 given)
-ERROR 2018-09-21 08:36:27,559 views 91303 123145406328832 views.py.get:24 global name 'BytesIO' is not defined
-ERROR 2018-09-21 08:36:29,860 views 91303 123145385295872 views.py.get:24 global name 'BytesIO' is not defined
-ERROR 2018-09-21 08:37:04,531 views 91303 123145384759296 views.py.get:24 global name 'BytesIO' is not defined
-ERROR 2018-09-21 09:29:51,407 views 92817 123145546235904 views.py.post:93 global name 'web' is not defined
-ERROR 2018-09-21 09:32:31,915 views 92880 123145341399040 views.py.post:111 invalid literal for int() with base 10: ''
-ERROR 2018-09-21 09:33:58,650 views 92880 123145341399040 views.py.post:111 invalid literal for int() with base 10: ''
-ERROR 2018-09-21 09:37:14,002 views 92880 123145341399040 views.py.post:61 global name 'domain' is not defined
-ERROR 2018-09-21 11:36:30,642 ldapop 95895 140735799808960 ldapop.py.ldap_get:91 {'desc': 'Invalid credentials'}
