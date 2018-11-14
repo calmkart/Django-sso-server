@@ -91,13 +91,15 @@ class login(View):
         if not start_up.objects.all().exists():
             return HttpResponseRedirect('/start/')
         cookie = request.COOKIES.get("sso_user", "")
+        redirect_url = request.GET.get("redirect_url", "")
         username = sso_decode(cookie)
         if username == '' or username == 'error':
             wx = {
                 "appid": weixin.objects.all()[0].appid,
                 "agentid": weixin.objects.all()[0].agentid,
                 "redirect_uri": weixin.objects.all()[0].redirect_uri,
-                "state": weixin.objects.all()[0].state
+                "state": weixin.objects.all()[0].state,
+                "redirect_url":redirect_url
             }
             return render(request, 'login.html', wx)
         else:

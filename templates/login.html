@@ -107,7 +107,11 @@
                         }
                     });
                     return
-                }; 
+                };
+                if ("{{ redirect_url }}"){
+                    window.location.href = "{{ redirect_url }}"
+                    return  
+                };
                 window.location.href = "{% url 'dashboard' %}"
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
