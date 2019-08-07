@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Dss管理后台{% endblock %}
+{% block content_header %}
+<h1>
+    企业微信扫码配置
+    <small>django sso server</small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li><a href="#">后台页面</a></li>
+    <li class="active">企业微信扫码</li>
+</ol>
+{% endblock %}
+{% block header_css %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="row clearfix">
+                <div class="col-md-6 column col-md-offset-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="text-center panel-title">
+                                企业微信扫码设置
+                            <i class="fa fa-fw fa-question-circle" title="设置项帮助" data-container="body" data-toggle="popover"
+                                data-placement="right" data-content="参考https://work.weixin.qq.com/api/doc#10719配置相关参数用于首页微信扫码登录"></i></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">appid</label>
+                                <input class="form-control" id="appid" type="text" value="{{wx_conf.appid}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">agentid</label>
+                                <input class="form-control" id="agentid" type="text" value="{{wx_conf.agentid}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">redirect_uri</label>
+                                <input class="form-control" id="redirect_uri" type="text" value="{{wx_conf.redirect_uri}}" />
+                                <p class="help-block strong">
+                                    请填写本系统域名+"/wxlogin"</p>
+                                <p class="help-block strong">
+                                    (举例如本系统域名为"http://www.calmkart.com",则填写"http://www.calmkart.com/wxlogin",企业微信后台也做一样的配置)
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">state</label>
+                                <input class="form-control" id="state" type="text" value="{{wx_conf.state}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">corpid</label>
+                                <input class="form-control" id="corpid" type="text" value="{{wx_conf.corpid}}" />
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">corp_secret</label>
+                                <input class="form-control" id="corp_secret" type="password" value="{{wx_corp_secret}}" />
+                            </div>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <button type="button" class="btn btn-info btn-block" onclick="submit_wxconf()">提交修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer_js %}
+<script>
+    $("#user_page").removeClass("active");
+    $("#wx_conf_page").addClass("active");
+    $("#back_page").addClass("active");
+
+    $(function () { 
+        $("[data-toggle='popover']").popover();
+    });
+
+    function submit_wxconf() {
+        var appid = $("#appid").val();
+        var agentid = $("#agentid").val();
+        var redirect_uri = $("#redirect_uri").val();
+        var state = $("#state").val();
+        var corpid = $("#corpid").val();
+        var corp_secret = $("#corp_secret").val();
+        var data = JSON.stringify({
+            "appid": appid,
+            "agentid": agentid,
+            "redirect_uri": redirect_uri,
+            "state": state,
+            "corpid": corpid,
+            "corp_secret": corp_secret,
+        });
+        $.ajax({
+            url: "{% url 'wxconf' %}",
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            async: true,
+            success: function (msg) {
+                if (msg["status"] === false) {
+                    bootbox.alert({
+                        size: "small",
+                        title: "修改企业微信扫码设置失败",
+                        message: msg["msg"]
+                    });
+                } else {
+                    bootbox.alert({
+                        size: "small",
+                        title: "修改企业微信扫码设置成功",
+                        message: "系统企业微信扫码设置成功,点击确定刷新页面",
+                        callback: function () {
+                            window.location.reload();
+                        }
+                    })
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                bootbox.alert({
+                    size: "small",
+                    title: "修改企业微信扫码设置失败",
+                    message: msg["msg"]
+                })
+            }
+        });
+    };
+</script>
+
+{% endblock %}

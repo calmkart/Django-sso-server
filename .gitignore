@@ -117,4 +117,6 @@ v2.4.5.tar.gz
 .idea/
 logs/*.log.*
 sso.db
-
+./pure-project/
+CentOS-Base.repo
+pip.conf

@@ -23,7 +23,7 @@ def create_captcha():
     draw = ImageDraw.Draw(img)
     #设置字体
     # font = ImageFont.load_default().font
-    font = ImageFont.truetype('Arial.ttf', 25)
+    font = ImageFont.truetype('/root/pure-project/Arial.ttf', 25)
 
     code = _getRandomChar()
     #将生成的字符画在画布上
