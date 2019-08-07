@@ -41,6 +41,10 @@ python manage.py migrate
 用django自带http服务器或者用gunicorn跑都可以
 然后进行系统初始化
 </pre>
+或者使用docker运行(更新说明:添加了docker运行,替换了Mysql为更简单的sqlite3,增加了whiteNoise静态文件服务器)
+<pre>
+docker run -d -p 8080:8080 calmkart/django_sso_server:v0.0.1
+</pre>
 
 #### 2 . 系统初始化
 登录单点登录服务器,填写相关初始化信息
