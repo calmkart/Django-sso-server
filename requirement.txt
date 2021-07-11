@@ -1,6 +1,6 @@
 certifi==2018.8.24
 chardet==3.0.4
-Django==1.11.29
+Django==2.2.24
 idna==2.7
 ldap==1.0.2
 ldap3==2.5.1
